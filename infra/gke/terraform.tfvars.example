@@ -1,0 +1,8 @@
+PROJECT = "terraform-knative"
+REGION = "us-east1"
+CREDENTIALS = "terraform-knative-dev.json"
+PREFIX = "tekn"
+ENVIRONMENT = "dev"
+NODE_COUNT = 1
+VM_SIZE = "e2-medium"
+NODE_DISK_SIZE_GB = 30
