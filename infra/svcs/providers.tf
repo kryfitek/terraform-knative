@@ -31,12 +31,22 @@ provider "kubernetes" {
   token = data.google_client_config.default.access_token
 }
 
-# provider "helm" {
-#   kubernetes {
-#     host = "https://${data.google_container_cluster.cluster.endpoint}"
-#     cluster_ca_certificate = base64decode(
-#       data.google_container_cluster.cluster.master_auth.0.cluster_ca_certificate
-#     )
-#     token = data.google_client_config.default.access_token
+# resource "kubernetes_secret" "docker" {
+#   metadata {
+#     name = "dockerhub"
+#     namespace = "backend"
+#   }
+#   type = "kubernetes.io/dockerconfigjson"
+#   data = {
+#     ".dockerconfigjson" = jsonencode({
+#       auths = {
+#         "${var.REGISTRY_SERVER}" = {
+#           "username" = var.REGISTRY_USERNAME
+#           "password" = var.REGISTRY_PASSWORD
+#           "email" = var.REGISTRY_EMAIL
+#           "auth" = base64encode("${var.REGISTRY_USERNAME}:${var.REGISTRY_PASSWORD}")
+#         }
+#       }
+#     })
 #   }
 # }

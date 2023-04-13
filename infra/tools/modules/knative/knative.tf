@@ -1,26 +1,20 @@
-data "kubectl_file_documents" "crds" {
-  content = file("${path.root}/manifests/knative/serving-crds.yaml")
+data "kubectl_file_documents" "operator" {
+  content = file("${path.root}/manifests/knative/operator.yaml")
 }
 
-resource "kubectl_manifest" "knative_crds" {
-  count = length(data.kubectl_file_documents.crds.documents)  
-  yaml_body = element(data.kubectl_file_documents.crds.documents, count.index)
+resource "kubectl_manifest" "knative_operator" {
+  count = length(data.kubectl_file_documents.operator.documents)  
+  yaml_body = element(data.kubectl_file_documents.operator.documents, count.index)
 }
 
-data "kubectl_file_documents" "core" {
-  content = file("${path.root}/manifests/knative/serving-core.yaml")
+data "kubectl_file_documents" "serving" {
+  content = file("${path.root}/manifests/knative/serving.yaml")
 }
 
 resource "kubectl_manifest" "knative_serving" {
-  count = length(data.kubectl_file_documents.core.documents)  
-  yaml_body = element(data.kubectl_file_documents.core.documents, count.index)
-}
-
-data "kubectl_file_documents" "kourier" {
-  content = file("${path.root}/manifests/knative/kourier.yaml")
-}
-
-resource "kubectl_manifest" "kourier_ingress" {
-  count = length(data.kubectl_file_documents.kourier.documents)  
-  yaml_body = element(data.kubectl_file_documents.kourier.documents, count.index)
+  count = length(data.kubectl_file_documents.serving.documents)  
+  yaml_body = element(data.kubectl_file_documents.serving.documents, count.index)
+  depends_on = [
+    data.kubectl_file_documents.operator
+  ]
 }
